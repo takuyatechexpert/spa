@@ -13,56 +13,22 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Title1</td>
-        <td>Content1</td>
-        <td>Ichiro</td>
+      <tr v-for="task in tasks">
+        <th scope="row">{{task.id}}</th>
+        <td>{{task.title}}</td>
+        <td>{{task.content}}</td>
+        <td>{{task.person_in_charge}}</td>
         <td>
-          <router-link :to="{name: 'task.show',params: {taskId: 1}}">
+          <router-link :to="{name: 'task.show',params: {taskId: String(task.id)}}">
+          <!-- js構文で元々数値型のtask.idを文字列型に変換している
+          これをしないと遷移先の詳細ページに数値型として送られるが
+          詳細ページでリロードするとなぜか文字列型に変わる
+          その為最初から文字列として送る為に文字列変換している -->
             <button class="btn btn-primary">Show</button>
           </router-link>
         </td>
         <td>
-          <router-link :to="{name: 'task.edit',params: {taskId: 1}}">
-            <button class="btn btn-success">Edit</button>
-          </router-link>
-        </td>
-        <td>
-          <button class="btn btn-danger">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Title2</td>
-        <td>Content2</td>
-        <td>Jiro</td>
-        <td>
-          <router-link :to="{name: 'task.show',params: {taskId: 2}}">
-            <button class="btn btn-primary">Show</button>
-          </router-link>
-        </td>
-        <td>
-          <router-link :to="{name: 'task.edit',params: {taskId: 2}}">
-            <button class="btn btn-success">Edit</button>
-          </router-link>
-        </td>
-        <td>
-          <button class="btn btn-danger">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Title3</td>
-        <td>Content3</td>
-        <td>Saburo</td>
-        <td>
-          <router-link :to="{name: 'task.show',params: {taskId: 1}}">
-            <button class="btn btn-primary">Show</button>
-          </router-link>
-        </td>
-        <td>
-          <router-link :to="{name: 'task.edit',params: {taskId: 3}}">
+          <router-link :to="{name: 'task.edit',params: {taskId: String(task.id)}}">
             <button class="btn btn-success">Edit</button>
           </router-link>
         </td>
@@ -76,5 +42,26 @@
 </template>
 
 <script>
-  export default {}
+  export default {
+    data: function(){
+      return {
+        tasks:[]
+      }
+    },
+
+    methods: {
+      getTasks(){
+        axios.get('/api/tasks')
+          .then((res)=> {
+            this.tasks = res.data;
+                      console.log(res.data)
+
+          });
+      }
+    },
+
+    mounted(){
+      this.getTasks();
+    }
+  }
 </script>
