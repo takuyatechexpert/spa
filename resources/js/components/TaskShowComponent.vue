@@ -48,7 +48,6 @@
         axios.get('/api/tasks/' + this.taskId)
           .then((res) => {
             this.task = res.data;
-            console.log(res)
           });
       }
     },
